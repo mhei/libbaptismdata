@@ -1,0 +1,38 @@
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+/*
+ * Copyright © 2023 Michael Heimpold <mhei@heimpold.de>
+ */
+
+#ifndef BAPTISMDATA_VERSION_H
+#define BAPTISMDATA_VERSION_H
+
+/* The major version, (1, if %LIBBAPTISMDATA_VERSION is 1.2.3) */
+#define LIBBAPTISMDATA_VERSION_MAJOR (@LIBBAPTISMDATA_VERSION_MAJOR@)
+
+/* The minor version (2, if %LIBBAPTISMDATA_VERSION is 1.2.3) */
+#define LIBBAPTISMDATA_VERSION_MINOR (@LIBBAPTISMDATA_VERSION_MINOR@)
+
+/* The micro version (3, if %LIBBAPTISMDATA_VERSION is 1.2.3) */
+#define LIBBAPTISMDATA_VERSION_MICRO (@LIBBAPTISMDATA_VERSION_MICRO@)
+
+/* The full version, like 1.2.3 */
+#define LIBBAPTISMDATA_VERSION        @LIBBAPTISMDATA_VERSION@
+
+/* The full version, in string form (suited for string concatenation) */
+#define LIBBAPTISMDATA_VERSION_STRING "@LIBBAPTISMDATA_VERSION@"
+
+/* Numerically encoded version, e.g. v1.2.3 is 0x010203 */
+#define LIBBAPTISMDATA_VERSION_HEX ((LIBBAPTISMDATA_MAJOR_VERSION << 16) |   \
+                                    (LIBBAPTISMDATA_MINOR_VERSION <<  8) |   \
+                                    (LIBBAPTISMDATA_MICRO_VERSION <<  0))
+
+/* Evaluates to true if the version is greater than or equal to @major, @minor and @micro */
+#define LIBBAPTISMDATA_VERSION_CHECK(major,minor,micro)      \
+    (LIBBAPTISMDATA_VERSION_MAJOR > (major) ||               \
+     (LIBBAPTISMDATA_VERSION_MAJOR == (major) &&             \
+      LIBBAPTISMDATA_VERSION_MINOR > (minor)) ||             \
+     (LIBBAPTISMDATA_VERSION_MAJOR == (major) &&             \
+      LIBBAPTISMDATA_VERSION_MINOR == (minor) &&             \
+      LIBBAPTISMDATA_VERSION_MICRO >= (micro)))
+
+#endif /* BAPTISMDATA_VERSION_H */
