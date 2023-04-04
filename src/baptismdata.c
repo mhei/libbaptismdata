@@ -10,6 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <libuboot.h>
+#include "config.h"
 #include "baptismdata.h"
 
 #ifndef CFG_FILE
@@ -39,8 +40,12 @@ int baptismdata_open(struct baptismdata_ctx **ctx)
 	if (!c)
 		return -ENOMEM;
 
+#ifdef HAVE_LIBUBOOT_READ_MULTIPLE_CONFIG
+	/* older library versions do not have YAML support yet, so this is
+	 * compile-time optional */
 	rv = libuboot_read_multiple_config(&c->uboot_ctx, CFG_FILE);
 	if (rv) {
+#endif
 		/* might be not a YAML file yet, try fallback to legacy parser */
 		rv = libuboot_initialize(&c->uboot_ctx, NULL);
 		if (rv < 0)
@@ -49,7 +54,9 @@ int baptismdata_open(struct baptismdata_ctx **ctx)
 		rv = libuboot_read_config(c->uboot_ctx, CFG_FILE);
 		if (rv < 0)
 			goto uboot_exit_out;
+#ifdef HAVE_LIBUBOOT_READ_MULTIPLE_CONFIG
 	}
+#endif
 
 	rv = libuboot_open(c->uboot_ctx);
 	if (rv == -ENODATA)

@@ -57,7 +57,10 @@ AC_PROG_CXX
 AC_PROG_MAKE_SET
 LT_INIT
 
-PKG_CHECK_MODULES([LIBUBOOTENV], [libubootenv])
+PKG_CHECK_MODULES([LIBUBOOTENV], [libubootenv],[
+    AC_CHECK_LIB(ubootenv, libuboot_read_config)
+    AC_CHECK_FUNCS([libuboot_read_multiple_config])
+])
 
 AC_CONFIG_FILES([
         Makefile

@@ -18,6 +18,9 @@ libbaptismdata_la_SOURCES = \
     baptismdata.c \
     $(libbaptismdatainclude_HEADERS)
 
+libbaptismdata_la_CPPFLAGS = \
+	-I $(top_builddir)
+
 libbaptismdata_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	-version-info $(LIBBAPTISMDATA_LT_VERSION_INFO) \
