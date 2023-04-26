@@ -59,7 +59,7 @@ LT_INIT
 
 PKG_CHECK_MODULES([LIBUBOOTENV], [libubootenv],[
     AC_CHECK_LIB(ubootenv, libuboot_read_config)
-    AC_CHECK_FUNCS([libuboot_read_multiple_config])
+    AC_CHECK_FUNCS([libuboot_read_config_ext])
 ])
 
 AC_CONFIG_FILES([

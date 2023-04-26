@@ -40,22 +40,21 @@ int baptismdata_open(struct baptismdata_ctx **ctx)
 	if (!c)
 		return -ENOMEM;
 
-#ifdef HAVE_LIBUBOOT_READ_MULTIPLE_CONFIG
+#ifdef HAVE_LIBUBOOT_READ_CONFIG_EXT
 	/* older library versions do not have YAML support yet, so this is
 	 * compile-time optional */
-	rv = libuboot_read_multiple_config(&c->uboot_ctx, CFG_FILE);
-	if (rv) {
-#endif
-		/* might be not a YAML file yet, try fallback to legacy parser */
-		rv = libuboot_initialize(&c->uboot_ctx, NULL);
-		if (rv < 0)
-			goto free_out;
+	rv = libuboot_read_config_ext(&c->uboot_ctx, CFG_FILE);
+	if (rv < 0)
+		goto free_out;
+#else
+	/* library without YAML support, so traditional bootstrap */
+	rv = libuboot_initialize(&c->uboot_ctx, NULL);
+	if (rv < 0)
+		goto free_out;
 
-		rv = libuboot_read_config(c->uboot_ctx, CFG_FILE);
-		if (rv < 0)
-			goto uboot_exit_out;
-#ifdef HAVE_LIBUBOOT_READ_MULTIPLE_CONFIG
-	}
+	rv = libuboot_read_config(c->uboot_ctx, CFG_FILE);
+	if (rv < 0)
+		goto uboot_exit_out;
 #endif
 
 	rv = libuboot_open(c->uboot_ctx);
