@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 /*
- * Copyright © 2023 Michael Heimpold <mhei@heimpold.de>
+ * Copyright © 2023-2024 Michael Heimpold <mhei@heimpold.de>
  */
 
 #include <stdio.h>
@@ -31,10 +31,8 @@ int baptismdata_open(struct baptismdata_ctx **ctx)
 
 	/* check whether config file exists and we have permissions to read */
 	rv = access(CFG_FILE, R_OK);
-	if (rv < 0) {
-		rv = -ENOENT;
-		goto free_out;
-	}
+	if (rv < 0)
+		return -ENOENT;
 
 	c = calloc(1, sizeof(*c));
 	if (!c)
