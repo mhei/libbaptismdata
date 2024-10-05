@@ -70,7 +70,7 @@ static void usage(char *program, int exitcode)
 
 	exit(exitcode);
 }
-	
+
 int main (int argc, char **argv) {
 	struct baptismdata_ctx *ctx;
 	char *options = "ns:Vh";
@@ -107,7 +107,7 @@ int main (int argc, char **argv) {
 	if (scriptfile && strcmp(scriptfile, "-") != 0) {
 		rv = access(scriptfile, R_OK);
 		if (rv < 0) {
-			fprintf(stderr, "Error: Cannot use script file '%s': %s", scriptfile, strerror(abs(rv)));
+			fprintf(stderr, "Error: Cannot use script file '%s': %m", scriptfile);
 			exit(EXIT_FAILURE);
 		}
 	}
