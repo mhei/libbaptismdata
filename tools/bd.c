@@ -3,6 +3,7 @@
  * Copyright © 2023 Michael Heimpold <mhei@heimpold.de>
  */
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -107,7 +108,7 @@ int main(int argc, char **argv) {
 	if (scriptfile && strcmp(scriptfile, "-") != 0) {
 		rv = access(scriptfile, R_OK);
 		if (rv < 0) {
-			fprintf(stderr, "Error: Cannot use script file '%s': %m", scriptfile);
+			fprintf(stderr, "Error: Cannot use script file '%s': %s\n", scriptfile, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 	}
