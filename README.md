@@ -7,7 +7,7 @@ specific keys or similar, is stored as key-value pairs using libubootenv.
 This library is intended to allow easy access from others programs and/or
 other libraries.
 
-Since the underlaying API of libubootenv already does a great job, this
+Since the underlying API of libubootenv already does a great job, this
 library can focus on the remaining parameterization.
 
 A command line tool allows to read/write/modify the baptism data from e.g.
@@ -38,7 +38,7 @@ these variables are stored during (OEM) device manufacturing inside the baptism
 data storage area. During later runtime, programs can use these variables.
 However, programmers must know which variables should be used how. The following
 table thus lists variable names, example content and describes example usage
-and/or usage contraints.
+and/or usage constraints.
 It does not automatically means, that each variable must be present in every device.
 If a programmer wants to make use of a variable, this should be negotiated which
 the OEM supplier of the board and/or defined internally during the baptism process
