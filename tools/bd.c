@@ -71,7 +71,7 @@ static void usage(char *program, int exitcode)
 	exit(exitcode);
 }
 
-int main (int argc, char **argv) {
+int main(int argc, char **argv) {
 	struct baptismdata_ctx *ctx;
 	char *options = "ns:Vh";
 	char *scriptfile = NULL;
