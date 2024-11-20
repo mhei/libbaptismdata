@@ -50,15 +50,17 @@ in the field - it does not replace proper configuration management. The idea is 
 that OEM suppliers and vendors have a well-known area where such kind of data is
 placed - which is also retained over firmware upgrades etc.
 
-| Variable Name    | Example Content                  | Description |
-|------------------|----------------------------------|-------------|
-| serial           | SH4CAWN00123                     | Traditional serial number as string, does not necessarily consist of digits only. Usually, this serial appears also on a label on the device. |
-| board_revision   | V0R7a                            | Revision of internal (main) PCB |
-| manufacturer     | Heimpold GmbH                    | Name of vendor, may include the legal form, typically used in product property lists or as text for the following URL |
-| manufacturer_url | https://example-manufacturer.com | URL to vendor website, ideally not a deep-link so that it is available for the whole product lifetime |
-| vendor           | Heimpold                         | Name of vendor, not including any legal form. Is typically used with `model` to form a unique product name aka `vendor` + `single whitespace` + `model` |
-| model            | Heavy Bear Mixer 3000            | A human-friedly name of the model, aka the product name; without vendor name, without any device specific data/numbers (serial numbers/MAC addresses) |
-| revision         | A0                               | Product revision, very often this is not defined for the first product revision so that users of this variable should consider reasonable fallback/default values. |
+| Variable Name    | Example Content                         | Description |
+|------------------|-----------------------------------------|-------------|
+| serial           | SH4CAWN00123                            | Traditional serial number as string, does not necessarily consist of digits only. Usually, this serial appears also on a label on the device. |
+| board_revision   | V0R7a                                   | Revision of internal (main) PCB |
+| manufacturer     | Heimpold GmbH                           | Name of vendor, may include the legal form, typically used in product property lists or as text for the following URL |
+| manufacturer_url | https://example-manufacturer.com        | URL to vendor website, ideally not a deep-link so that it is available for the whole product lifetime |
+| vendor           | Heimpold                                | Name of vendor, not including any legal form. Is typically used with `model` to form a unique product name aka `vendor` + `single whitespace` + `model` |
+| model            | Heavy Bear Mixer 3000                   | A human-friedly name of the model, aka the product name; without vendor name, without any device specific data/numbers (serial numbers/MAC addresses) |
+| model_url        | https://example-manufacturer.com/bm3000 | URL to model website (if any), as above, ideally not a deep-link |
+| model_no         | BM3000                                  | A model number as string (if any) |
+| revision         | A0                                      | Product revision, very often this is not defined for the first product revision so that users of this variable should consider reasonable fallback/default values. |
 
 Note: Vendor and manufacturer refer here to the very same company - it is the brand
 which appears physically on the device label and/or which is shown on device's web frontend.
