@@ -209,7 +209,7 @@ int main(int argc, char **argv) {
 
 	rv = baptismdata_store(ctx);
 	if (rv < 0)
-		fprintf(stderr, "Could not store the baptism data: %s", strerror(abs(rv)));
+		fprintf(stderr, "Could not store the baptism data: %s\n", strerror(abs(rv)));
 
 close_out:
 	baptismdata_close(ctx);
