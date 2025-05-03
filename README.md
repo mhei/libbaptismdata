@@ -53,6 +53,7 @@ placed - which is also retained over firmware upgrades etc.
 | Variable Name    | Example Content                         | Description |
 |------------------|-----------------------------------------|-------------|
 | serial           | SH4CAWN00123                            | Traditional serial number as string, does not necessarily consist of digits only. Usually, this serial appears also on a label on the device. |
+| serial#          | ABC12345                                | Traditional serial number as string, does not necessarily consist of digits only. Unlike `serial`, this is an internal serial number, e.g. of the internal controller board, not of the whole device. |
 | board_revision   | V0R7a                                   | Revision of internal (main) PCB |
 | manufacturer     | Heimpold GmbH                           | Name of vendor, may include the legal form, typically used in product property lists or as text for the following URL |
 | manufacturer_url | https://example-manufacturer.com        | URL to vendor website, ideally not a deep-link so that it is available for the whole product lifetime |
