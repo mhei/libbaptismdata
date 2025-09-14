@@ -107,21 +107,6 @@ const char *baptismdata_get_name(void *entry);
  */
 const char *baptismdata_get_value(void *entry);
 
-/*
- * High-level API
- */
-
-/** @brief Return the device' serial number
- *
- * Return the serial number of the device or NULL if not (yet) set.
- * The returned string must not be free by the caller but is freed
- * when `baptismdata_close` is called.
- *
- * @param[in] ctx baptism data context
- * @return serial number in case of success, NULL in case of error
- */
-char *baptismdata_get_serialno(struct baptismdata_ctx *ctx);
-
 #ifdef __cplusplus
 }
 #endif
