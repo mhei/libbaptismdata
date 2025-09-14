@@ -85,7 +85,7 @@ char *baptismdata_get_var(struct baptismdata_ctx *ctx, const char *varname);
 
 /** @brief Iterator
  *
- * Return a pointer to an baptism data entry. Used to iterate all variables.
+ * Return a pointer to a baptism data entry. Used to iterate all variables.
  *
  * @param[in] ctx baptism data context
  * @param[in] next
@@ -93,14 +93,14 @@ char *baptismdata_get_var(struct baptismdata_ctx *ctx, const char *varname);
  */
 void *baptismdata_iterator(struct baptismdata_ctx *ctx, void *next);
 
-/** @brief Accessor to get variable name from a baptism data entry
+/** @brief Accessor to get variable name from a baptism data entry.
  *
  * @param[in] baptism data entry element
  * @return pointer to name or NULL
  */
 const char *baptismdata_get_name(void *entry);
 
-/** @brief Accessor to get variable value from a baptism data entry
+/** @brief Accessor to get variable value from a baptism data entry.
  *
  * @param[in] baptism data entry element
  * @return pointer to name or NULL
