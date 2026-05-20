@@ -28,6 +28,11 @@ Installation
 
 The shell commands are ``./autogen.sh; ./configure; make; make install``.
 
+An (optional) mDNS announcement tool based on libavahi-client can be built with
+``./configure --with-avahi-mdns``. It installs ``bd-mdns`` and requires the
+``avahi-client`` and ``avahi-common`` development packages at build time.
+See below for a short tool introduction.
+
 
 
 Well-Known Baptism Data
@@ -98,6 +103,30 @@ baptism-data:
         - path: /dev/mmcblk0boot1
           offset: -0x20000
 ```
+
+
+
+bd-mdns
+-------
+
+This tiny tool is designed to use the baptism-data to announce a service
+on the network via mDNS.
+
+By default, ``bd-mdns`` uses the baptism-data ``model`` variable as service name,
+the ``serial`` variable in the TXT record and adds ``model`` and ``vendor`` TXT
+records when present.
+
+If ``--device`` is omitted, the network interface to use is tried to be
+automatically detected, i.e. the first interface found in ``/sys/class/net``
+is used which is not loopback and not e.g. a CAN interface.
+
+As device individualization element, it uses the interface MAC address in brackets
+appended to the service name.
+Use ``--use-serial`` to place the serial number in brackets instead.
+
+When ``--use-vendor`` is used, then the default service name (the baptized model)
+is additionally prefixed with the baptizd vendor string, i.e.
+``vendor + " " + model + " " + "[" + individualization element + "]"``.
 
 
 

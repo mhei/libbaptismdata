@@ -62,6 +62,20 @@ PKG_CHECK_MODULES([LIBUBOOTENV], [libubootenv],[
     AC_CHECK_FUNCS([libuboot_read_config_ext])
 ])
 
+AC_ARG_WITH([avahi-mdns],
+	AS_HELP_STRING([--with-avahi-mdns], [build the Avahi mDNS announcement tool @<:@default=no@:>@]),
+	[],
+	[with_avahi_mdns=no])
+
+AS_IF([test "x$with_avahi_mdns" = "xyes"], [
+	PKG_CHECK_MODULES([AVAHI], [avahi-client])
+	AC_DEFINE([WITH_AVAHI_MDNS], [1], [Define to 1 if the Avahi mDNS tool is built.])
+], [
+	with_avahi_mdns=no
+])
+
+AM_CONDITIONAL([WITH_AVAHI_MDNS], [test "x$with_avahi_mdns" = "xyes"])
+
 AC_CONFIG_FILES([
         Makefile
         src/Makefile
