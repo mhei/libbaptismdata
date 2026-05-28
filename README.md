@@ -116,6 +116,10 @@ By default, ``bd-mdns`` uses the baptism-data ``model`` variable as service name
 the ``serial`` variable in the TXT record and adds ``model`` and ``vendor`` TXT
 records when present.
 
+Use ``--serial-key <name>`` to read the serial value from a different
+baptism-data variable while still publishing it as ``serial=...`` in the TXT
+record.
+
 If ``--device`` is omitted, the network interface to use is tried to be
 automatically detected, i.e. the first interface found in ``/sys/class/net``
 is used which is not loopback and not e.g. a CAN interface.

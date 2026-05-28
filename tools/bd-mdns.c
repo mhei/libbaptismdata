@@ -43,6 +43,7 @@ static const struct option long_options[] = {
 	{ "name",          required_argument, NULL, 'n' },
 	{ "type",          required_argument, NULL, 't' },
 	{ "port",          required_argument, NULL, 'p' },
+	{ "serial-key",    required_argument, NULL, 'S' },
 	{ "use-serial",    no_argument,       NULL, 's' },
 	{ "use-vendor",    no_argument,       NULL, 'v' },
 
@@ -56,6 +57,7 @@ static const char *long_options_description[] = {
 	"service name (default: baptized model name)",
 	"mDNS service type (default: _ssh._tcp)",
 	"port announced via mDNS (default: 22)",
+	"baptism-data variable name to read as serial (default: serial)",
 	"use baptized serial instead of interface MAC address as individualization (in brackets)",
 	"prefix the default (baptized model-based) service name with the baptized vendor",
 
@@ -87,6 +89,7 @@ static void usage(const char *program, int exitcode)
 	fprintf(f, "\t--name <baptized model name>\n");
 	fprintf(f, "\t--type _ssh._tcp\n");
 	fprintf(f, "\t--port 22\n");
+	fprintf(f, "\t--serial-key serial\n");
 	fprintf(f, "\tbracket individualization: MAC address\n");
 
 	exit(exitcode);
@@ -297,9 +300,10 @@ int main(int argc, char **argv)
 	char *i15n_value; // individualization_value
 	char *combined_service_name = NULL;
 	char *service_name = NULL;
+	const char *serial_key = "serial";
 	char mac[32];
 	char *progname = argv[0];
-	char *options = "d:n:t:p:svVh";
+	char *options = "d:n:t:p:S:svVh";
 	char *endptr;
 	unsigned int ifindex;
 	long port;
@@ -339,6 +343,9 @@ int main(int argc, char **argv)
 			}
 			ctx.port = (uint16_t)port;
 			break;
+		case 'S':
+			serial_key = optarg;
+			break;
 		case 's':
 			use_serial = true;
 			break;
@@ -372,9 +379,10 @@ int main(int argc, char **argv)
 	if (!ctx.service_type)
 		ctx.service_type = "_ssh._tcp";
 
-	rv = read_baptism_var("serial", &ctx.serial);
+	rv = read_baptism_var(serial_key, &ctx.serial);
 	if (rv < 0) {
-		fprintf(stderr, "Error: could not read serial from baptism data: %s\n", strerror(abs(rv)));
+		fprintf(stderr, "Error: could not read serial from baptism data key '%s': %s\n",
+		        serial_key, strerror(abs(rv)));
 		return EXIT_FAILURE;
 	}
 
