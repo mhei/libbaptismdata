@@ -111,6 +111,8 @@ bd-mdns
 
 This tiny tool is designed to use the baptism-data to announce a service
 on the network via mDNS.
+The mDNS service is announced on all interfaces (handled automatically by Avahi).
+
 
 By default, ``bd-mdns`` uses the baptism-data ``model`` variable as service name,
 the ``serial`` variable in the TXT record and adds ``model`` and ``vendor`` TXT
@@ -120,12 +122,12 @@ Use ``--serial-key <name>`` to read the serial value from a different
 baptism-data variable while still publishing it as ``serial=...`` in the TXT
 record.
 
-If ``--device`` is omitted, the network interface to use is tried to be
-automatically detected, i.e. the first interface found in ``/sys/class/net``
-is used which is not loopback and not e.g. a CAN interface.
-
-As device individualization element, it uses the interface MAC address in brackets
+As device individualization element, it uses the MAC address in brackets
 appended to the service name.
+If ``--device`` is omitted, the network interface which is the source of
+this MAC address is tried to be automatically detected, i.e. the first interface
+found in ``/sys/class/net`` is used which is not loopback and not e.g. a CAN
+interface.
 Use ``--use-serial`` to place the serial number in brackets instead.
 
 When ``--use-vendor`` is used, then the default service name (the baptized model)

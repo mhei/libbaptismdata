@@ -26,7 +26,6 @@
 struct announce_ctx {
 	AvahiSimplePoll *poll;
 	AvahiEntryGroup *group;
-	AvahiIfIndex iface;
 	char *ifname;
 	char *service_name;
 	char *service_type;
@@ -53,7 +52,7 @@ static const struct option long_options[] = {
 };
 
 static const char *long_options_description[] = {
-	"interface name to use, e.g. eth0 (default: try to auto-detect)",
+	"interface name to use as MAC address source, e.g. eth0 (default: try to auto-detect)",
 	"service name (default: baptized model name)",
 	"mDNS service type (default: _ssh._tcp)",
 	"port announced via mDNS (default: 22)",
@@ -129,11 +128,10 @@ static int read_mac_address(const char *ifname, char *buf, size_t len)
 
 // wild assumption: on embedded devices is e.g. br0 listed before
 // eth0 because of sorting... not ensured... heuristic
-static int detect_interface(char **ifname_out, AvahiIfIndex *iface_out)
+static int detect_interface(char **ifname_out)
 {
 	DIR *dir;
 	struct dirent *entry;
-	unsigned int ifindex;
 	char *ifname;
 
 	dir = opendir("/sys/class/net");
@@ -149,8 +147,7 @@ static int detect_interface(char **ifname_out, AvahiIfIndex *iface_out)
 			continue;
 
 		errno = 0;
-		ifindex = if_nametoindex(entry->d_name);
-		if (ifindex == 0)
+		if (if_nametoindex(entry->d_name) == 0)
 			continue;
 
 		ifname = strdup(entry->d_name);
@@ -161,7 +158,6 @@ static int detect_interface(char **ifname_out, AvahiIfIndex *iface_out)
 
 		closedir(dir);
 		*ifname_out = ifname;
-		*iface_out = (AvahiIfIndex)ifindex;
 		return 0;
 	}
 
@@ -239,7 +235,7 @@ static int create_services(AvahiClient *client, struct announce_ctx *ctx)
 	}
 
 	rv = avahi_entry_group_add_service_strlst(ctx->group,
-	                                          ctx->iface,
+	                                          AVAHI_IF_UNSPEC,
 	                                          AVAHI_PROTO_UNSPEC,
 	                                          0,
 	                                          ctx->service_name,
@@ -324,7 +320,6 @@ int main(int argc, char **argv)
 					fprintf(stderr, "Error: unknown interface '%s'\n", optarg);
 				return EXIT_FAILURE;
 			}
-			ctx.iface = (AvahiIfIndex)ifindex;
 			ctx.ifname = optarg;
 			break;
 		case 'n':
@@ -361,10 +356,10 @@ int main(int argc, char **argv)
 		}
 	}
 
-	if (ctx.iface == 0) {
-		rv = detect_interface(&ctx.ifname, &ctx.iface);
+	if (!ctx.ifname) {
+		rv = detect_interface(&ctx.ifname);
 		if (rv < 0) {
-			fprintf(stderr, "Error: could not auto-detect interface to use: %s\n",
+			fprintf(stderr, "Error: could not auto-detect interface for MAC address source: %s\n",
 				strerror(abs(rv)));
 			return EXIT_FAILURE;
 		}
