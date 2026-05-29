@@ -118,9 +118,9 @@ By default, ``bd-mdns`` uses the baptism-data ``model`` variable as service name
 the ``serial`` variable in the TXT record and adds ``model`` and ``vendor`` TXT
 records when present.
 
-Use ``--serial-key <name>`` to read the serial value from a different
-baptism-data variable while still publishing it as ``serial=...`` in the TXT
-record.
+Use ``--serial-key <name>[,<name>...]`` to read the serial value from different
+baptism-data variables while still publishing it as ``serial=...`` in the TXT
+record. This can be a list of keys, comma-separated - the first found value wins.
 
 As device individualization element, it uses the MAC address in brackets
 appended to the service name.

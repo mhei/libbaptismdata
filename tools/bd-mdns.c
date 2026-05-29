@@ -42,7 +42,7 @@ static const struct option long_options[] = {
 	{ "name",          required_argument, NULL, 'n' },
 	{ "type",          required_argument, NULL, 't' },
 	{ "port",          required_argument, NULL, 'p' },
-	{ "serial-key",    required_argument, NULL, 'S' },
+	{ "serial-keys",   required_argument, NULL, 'S' },
 	{ "use-serial",    no_argument,       NULL, 's' },
 	{ "use-vendor",    no_argument,       NULL, 'v' },
 
@@ -56,7 +56,7 @@ static const char *long_options_description[] = {
 	"service name (default: baptized model name)",
 	"mDNS service type (default: _ssh._tcp)",
 	"port announced via mDNS (default: 22)",
-	"baptism-data variable name to read as serial (default: serial)",
+	"baptism-data variable name(s) to read as serial (default: serial,serial#)",
 	"use baptized serial instead of interface MAC address as individualization (in brackets)",
 	"prefix the default (baptized model-based) service name with the baptized vendor",
 
@@ -88,7 +88,7 @@ static void usage(const char *program, int exitcode)
 	fprintf(f, "\t--name <baptized model name>\n");
 	fprintf(f, "\t--type _ssh._tcp\n");
 	fprintf(f, "\t--port 22\n");
-	fprintf(f, "\t--serial-key serial\n");
+	fprintf(f, "\t--serial-keys serial,serial#\n");
 	fprintf(f, "\tbracket individualization: MAC address\n");
 
 	exit(exitcode);
@@ -200,6 +200,37 @@ static int read_baptism_var_optional(const char *name, char **value_out)
 	return rv;
 }
 
+static int read_baptism_var_with_list(const char *key_list, char **value_out)
+{
+    int rv;
+    char buf[256];
+    char *key;
+    char *saveptr;
+
+    /* strtok modifies the string, so make a copy */
+    strncpy(buf, key_list, sizeof(buf) - 1);
+    buf[sizeof(buf) - 1] = '\0';
+
+    key = strtok_r(buf, ",", &saveptr);
+
+    while (key != NULL) {
+        /* trim leading spaces if present */
+        while (*key == ' ')
+            key++;
+
+        rv = read_baptism_var(key, value_out);
+        if (rv != -ENOENT) {
+            /* found or another error */
+            return rv;
+        }
+
+        key = strtok_r(NULL, ",", &saveptr);
+    }
+
+    /* none of the keys in the list gave a result */
+    return -ENOENT;
+}
+
 static int create_services(AvahiClient *client, struct announce_ctx *ctx)
 {
 	AvahiStringList *txt = NULL;
@@ -296,7 +327,7 @@ int main(int argc, char **argv)
 	char *i15n_value; // individualization_value
 	char *combined_service_name = NULL;
 	char *service_name = NULL;
-	const char *serial_key = "serial";
+	const char *serial_keys = "serial,serial#";
 	char mac[32];
 	char *progname = argv[0];
 	char *options = "d:n:t:p:S:svVh";
@@ -339,7 +370,7 @@ int main(int argc, char **argv)
 			ctx.port = (uint16_t)port;
 			break;
 		case 'S':
-			serial_key = optarg;
+			serial_keys = optarg;
 			break;
 		case 's':
 			use_serial = true;
@@ -374,10 +405,10 @@ int main(int argc, char **argv)
 	if (!ctx.service_type)
 		ctx.service_type = "_ssh._tcp";
 
-	rv = read_baptism_var(serial_key, &ctx.serial);
+	rv = read_baptism_var_with_list(serial_keys, &ctx.serial);
 	if (rv < 0) {
-		fprintf(stderr, "Error: could not read serial from baptism data key '%s': %s\n",
-		        serial_key, strerror(abs(rv)));
+		fprintf(stderr, "Error: could not read serial from baptism data key(s) '%s': %s\n",
+		        serial_keys, strerror(abs(rv)));
 		return EXIT_FAILURE;
 	}
 
