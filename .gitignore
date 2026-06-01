@@ -60,3 +60,10 @@ Makefile
 .cproject
 .settings
 .vscode
+
+
+# build dirs
+/build/
+/build-*
+/install/
+/target/
