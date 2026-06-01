@@ -13,7 +13,7 @@ dnl Take care to update the libtool versioning when required (LIBBAPTISMDATA_LD_
 dnl http://www.gnu.org/software/libtool/manual/html_node/Libtool-versioning.html
 dnl
 m4_define([libbaptismdata_version_major], [0])
-m4_define([libbaptismdata_version_minor], [1])
+m4_define([libbaptismdata_version_minor], [2])
 m4_define([libbaptismdata_version_micro], [0])
 
 m4_define([libbaptismdata_version],
