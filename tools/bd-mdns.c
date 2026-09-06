@@ -23,6 +23,9 @@
 #include "baptismdata.h"
 #include "config.h"
 
+/* exit code to signal that the device is not yet (fully) baptized */
+#define EXIT_FAILURE_UNBAPTIZED 10
+
 struct announce_ctx {
 	AvahiSimplePoll *poll;
 	AvahiEntryGroup *group;
@@ -433,7 +436,8 @@ int main(int argc, char **argv)
 			free(ctx.vendor);
 			fprintf(stderr, "Error: could not read model from baptism data for default service name: %s\n",
 			        strerror(ENOENT));
-			return EXIT_FAILURE;
+			// exit with specific exit code to tell systemd that auto-restart the service makes no sense
+			return EXIT_FAILURE_UNBAPTIZED;
 		}
 
 		service_name = strdup(ctx.model);
@@ -452,7 +456,8 @@ int main(int argc, char **argv)
 				free(ctx.model);
 				fprintf(stderr, "Error: could not read vendor from baptism data for default service name: %s\n",
 				        strerror(ENOENT));
-				return EXIT_FAILURE;
+				// exit with specific exit code to tell systemd that auto-restart the service makes no sense
+				return EXIT_FAILURE_UNBAPTIZED;
 			}
 
 			rv = snprintf(NULL, 0, "%s %s", ctx.vendor, service_name);
