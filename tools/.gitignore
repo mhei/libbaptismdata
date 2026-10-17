@@ -1,2 +1,5 @@
 bd
+bd-is-baptized
 bd-mdns
+bd-upnp
+lighttpd-bd-upnp.conf
