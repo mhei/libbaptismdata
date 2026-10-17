@@ -76,6 +76,31 @@ AS_IF([test "x$with_avahi_mdns" = "xyes"], [
 
 AM_CONDITIONAL([WITH_AVAHI_MDNS], [test "x$with_avahi_mdns" = "xyes"])
 
+AC_ARG_WITH([upnp],
+	AS_HELP_STRING([--with-upnp], [build the UPnP announcement tool @<:@default=no@:>@]),
+	[], [with_upnp=no])
+
+AS_IF([test "x$with_upnp" = "xyes"], [
+	PKG_CHECK_MODULES([UPNP], [libupnp >= 1.8.4])
+	upnp_save_CPPFLAGS=$CPPFLAGS
+	CPPFLAGS="$CPPFLAGS $UPNP_CFLAGS"
+	AC_MSG_CHECKING([for libupnp device, SSDP and IPv6 support])
+	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+#include <upnpconfig.h>
+#if !defined(UPNP_HAVE_DEVICE) || !UPNP_HAVE_DEVICE || \
+    !defined(UPNP_HAVE_SSDP) || !UPNP_HAVE_SSDP || \
+    !defined(UPNP_ENABLE_IPV6) || !UPNP_ENABLE_IPV6
+#error Required libupnp features are disabled
+#endif
+	]], [[]])], [AC_MSG_RESULT([yes])], [
+		AC_MSG_RESULT([no])
+		AC_MSG_ERROR([bd-upnp requires libupnp with device, SSDP and IPv6 support])
+	])
+	CPPFLAGS=$upnp_save_CPPFLAGS
+], [with_upnp=no])
+
+AM_CONDITIONAL([WITH_UPNP], [test "x$with_upnp" = "xyes"])
+
 AC_CONFIG_FILES([
         Makefile
         src/Makefile

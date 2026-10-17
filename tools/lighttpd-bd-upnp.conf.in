@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: CC-BY-SA-3.0
+# Example for bd-upnp; include from the main lighttpd configuration.
+# Enable mod_alias once (omit this line if it is already loaded).
+#server.modules += ( "mod_alias" )
+
+# Match --descriptor-dir and --http-root if their defaults were overridden.
+# Keep bd-upnp.state (locks and temporary files) outside these aliases.
+alias.url += (
+    "/upnp/"        => "/run/bd-upnp/",
+    "/upnp-static/" => "@HTTP_ROOT@/"
+)
+
+# Set MIME types only for these aliases; avoid duplicate extension keys in
+# a global mimetype.assign loaded by the main configuration.
+$HTTP["url"] =~ "^/(upnp|upnp-static)/" {
+    mimetype.assign = (
+        ".xml" => "text/xml; charset=utf-8",
+        ".png" => "image/png"
+    )
+}
+
+# Configure listeners in the main lighttpd configuration. They must serve the
+# interface IPv4 AND IPv6 addresses on the port passed as --http-port (default
+# 80). Wildcard listeners also cover addresses added after lighttpd starts.
+# For example, on a dedicated lighttpd instance:
+# server.bind = "0.0.0.0"
+# server.port = 80
+# $SERVER["socket"] == "[::]:80" {
+#     server.v4mapped = "disable"
+# }
+# Reuse existing listeners if lighttpd already serves a web interface.
+# Ensure the lighttpd user can traverse the descriptor directories and read
+# their XML files. bd-upnp needs write access; lighttpd needs only read access.
