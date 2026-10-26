@@ -101,6 +101,24 @@ AS_IF([test "x$with_upnp" = "xyes"], [
 
 AM_CONDITIONAL([WITH_UPNP], [test "x$with_upnp" = "xyes"])
 
+AC_ARG_WITH([lighttpd-cfg],
+	AS_HELP_STRING([--with-lighttpd-cfg=FILE], [also install the lighttpd configuration at FILE (requires --with-upnp) @<:@default=no@:>@]),
+	[], [with_lighttpd_cfg=no])
+
+LIGHTTPD_CFG=
+AS_IF([test "x$with_lighttpd_cfg" != "xno"], [
+	AS_CASE([$with_lighttpd_cfg],
+		[/|/*/], [AC_MSG_ERROR([--with-lighttpd-cfg requires an absolute file path])],
+		[/*], [],
+		[*], [AC_MSG_ERROR([--with-lighttpd-cfg requires an absolute file path])])
+	AS_IF([test "x$with_upnp" != "xyes"], [
+		AC_MSG_ERROR([--with-lighttpd-cfg requires --with-upnp])
+	])
+	LIGHTTPD_CFG=$with_lighttpd_cfg
+])
+AC_SUBST([LIGHTTPD_CFG])
+AM_CONDITIONAL([WITH_LIGHTTPD_CFG], [test "x$with_lighttpd_cfg" != "xno"])
+
 AC_CONFIG_FILES([
         Makefile
         src/Makefile

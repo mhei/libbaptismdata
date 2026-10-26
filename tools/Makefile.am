@@ -48,4 +48,11 @@ CLEANFILES = lighttpd-bd-upnp.conf
 
 install-data-hook:
 	$(MKDIR_P) "$(DESTDIR)$(datadir)/bd-upnp"
+if WITH_LIGHTTPD_CFG
+	$(MKDIR_P) "$$(dirname "$(DESTDIR)$(LIGHTTPD_CFG)")"
+	$(INSTALL_DATA) lighttpd-bd-upnp.conf "$(DESTDIR)$(LIGHTTPD_CFG)"
+
+uninstall-hook:
+	rm -f "$(DESTDIR)$(LIGHTTPD_CFG)"
+endif
 endif

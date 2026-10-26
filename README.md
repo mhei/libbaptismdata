@@ -40,6 +40,13 @@ development files and pkg-config metadata. The option is disabled by default;
 libupnp is only searched for when requested. The UPnP descriptors and optional
 icons must be served by an external HTTP server, for example lighttpd.
 
+To additionally install the lighttpd example at a specific configuration path,
+use ``./configure --with-upnp --with-lighttpd-cfg=/etc/lighttpd.d/50-bd-upnp.conf``.
+The path must be an absolute file path. This additional installation is disabled
+by default (or explicitly with ``--without-lighttpd-cfg``) and requires
+``--with-upnp``. Installation honors ``DESTDIR``; the example under
+``${docdir}/examples/lighttpd-bd-upnp.conf`` is still installed as usual.
+
 
 
 Well-Known Baptism Data
