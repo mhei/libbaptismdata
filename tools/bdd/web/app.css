@@ -1,0 +1,24 @@
+.baptism-table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 32rem;
+}
+
+.baptism-table thead {
+  --bs-table-bg: var(--bs-secondary-bg);
+}
+
+.baptism-table tr > :first-child {
+  width: 50%;
+  overflow-wrap: anywhere;
+}
+
+.baptism-table tr > :nth-child(2) {
+  width: 4rem;
+  white-space: nowrap;
+}
+
+.baptism-table tr > :nth-child(3) {
+  width: 6rem;
+  white-space: nowrap;
+}

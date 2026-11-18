@@ -131,11 +131,29 @@ AS_IF([test "x$with_lighttpd_cfg" != "xno"], [
 AC_SUBST([LIGHTTPD_CFG])
 AM_CONDITIONAL([WITH_LIGHTTPD_CFG], [test "x$with_lighttpd_cfg" != "xno"])
 
+AC_ARG_WITH([bdd],
+    AS_HELP_STRING([--with-bdd], [build the baptism data HTTP daemon @<:@default=no@:>@]),
+    [], [with_bdd=no])
+AS_IF([test "x$with_bdd" = "xyes"], [
+    PKG_CHECK_MODULES([BDD], [libmicrohttpd >= 0.9.71 json-c >= 0.15 gnutls >= 3.5.0 libsystemd avahi-client libeconf >= 0.7.1 libcrypt])
+])
+AM_CONDITIONAL([WITH_BDD], [test "x$with_bdd" = "xyes"])
+AC_ARG_WITH([bdd-vendor-dir],
+    AS_HELP_STRING([--with-bdd-vendor-dir=DIR], [vendor configuration directory @<:@default=/lib/bdd@:>@]),
+    [BDD_VENDOR_DIR=$withval], [BDD_VENDOR_DIR=/lib/bdd])
+AC_SUBST([BDD_VENDOR_DIR])
+AC_ARG_WITH([systemdsystemunitdir],
+    AS_HELP_STRING([--with-systemdsystemunitdir=DIR], [systemd unit directory @<:@default=/lib/systemd/system@:>@]),
+    [systemdsystemunitdir=$withval], [systemdsystemunitdir=/lib/systemd/system])
+AC_SUBST([systemdsystemunitdir])
+AM_PATH_PYTHON([3], [], [:])
+
 AC_CONFIG_FILES([
         Makefile
         src/Makefile
         src/baptismdata-version.h
         src/libbaptismdata.pc
+        tools/bdd/Makefile
         tools/Makefile
 ])
 AC_OUTPUT

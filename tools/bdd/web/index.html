@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Device's Baptism Data</title>
+  <link rel="stylesheet" href="/bootstrap.min.css">
+  <link rel="stylesheet" href="/app.css">
+  <script src="/app.js" defer></script>
+</head>
+<body class="bg-body-tertiary">
+<main class="container py-5">
+  <h1>Device's Baptism Data</h1>
+  <p class="text-secondary">Read and edit the device's baptism data. Empty fields save an empty string; clear Defined to remove a key. Check Defined with an empty field to save an empty string.</p>
+  <form id="login" class="card card-body mb-4" hidden>
+    <label for="password" class="form-label">Password</label>
+    <input id="password" type="password" autocomplete="current-password" class="form-control mb-3" required>
+    <button class="btn btn-primary align-self-start" type="submit">Sign in</button>
+  </form>
+  <div id="status" class="alert alert-info" role="status" aria-live="polite">Loading baptism data…</div>
+  <form id="editor" hidden>
+    <div class="table-responsive">
+      <table class="table align-middle baptism-table">
+        <thead class="table-light"><tr><th scope="col">Key</th><th scope="col">R/W</th><th scope="col">Defined</th><th scope="col">Value</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <button id="save" type="submit" class="btn btn-primary">Save Baptism Data to Device</button>
+  </form>
+  <p class="mt-4"><a href="/openapi.yaml">OpenAPI Specification</a></p>
+</main>
+</body>
+</html>

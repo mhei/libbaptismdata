@@ -1,3 +1,11 @@
+SUBDIRS =
+
+if WITH_BDD
+SUBDIRS += bdd
+endif
+
+DIST_SUBDIRS = bdd
+
 # SPDX-License-Identifier: GPL-3-or-later
 #
 # Copyright © 2023 Michael Heimpold <mhei@heimpold.de>

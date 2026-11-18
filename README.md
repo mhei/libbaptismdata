@@ -304,6 +304,18 @@ selected ports; these are independent of ``--http-port``.
 
 
 
+bdd - HTTP API and Web Editor
+-----------------------------
+
+The optional `bdd` daemon provides a REST API, a Bootstrap web editor, optional
+password/mTLS authentication and Zeroconf discovery. Enable it with
+`./configure --with-bdd`. See [tools/bdd/README.md](tools/bdd/README.md) for
+configuration precedence, API operations, build dependencies and installation.
+The idea of this helper daemon is to ease the device baptism process during
+end-of-line tests.
+
+
+
 Report a Bug
 ------------
 

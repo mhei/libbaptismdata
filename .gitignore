@@ -34,6 +34,7 @@ autom4te.cache
 /depcomp
 /install-sh
 /missing
+/test-driver
 /stamp-h1
 my-configure.sh
 
@@ -67,3 +68,6 @@ Makefile
 /build-*
 /install/
 /target/
+
+# Python test bytecode
+__pycache__/
