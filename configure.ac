@@ -101,6 +101,18 @@ AS_IF([test "x$with_upnp" = "xyes"], [
 
 AM_CONDITIONAL([WITH_UPNP], [test "x$with_upnp" = "xyes"])
 
+AC_ARG_WITH([upnp-manager],
+	AS_HELP_STRING([--with-upnp-manager], [build the systemd UPnP interface manager (requires --with-upnp) @<:@default=no@:>@]),
+	[], [with_upnp_manager=no])
+
+AS_IF([test "x$with_upnp_manager" = "xyes"], [
+	AS_IF([test "x$with_upnp" != "xyes"], [
+		AC_MSG_ERROR([--with-upnp-manager requires --with-upnp])
+	])
+	PKG_CHECK_MODULES([UPNP_MANAGER], [libsystemd >= 237 yaml-0.1])
+], [with_upnp_manager=no])
+AM_CONDITIONAL([WITH_UPNP_MANAGER], [test "x$with_upnp_manager" = "xyes"])
+
 AC_ARG_WITH([lighttpd-cfg],
 	AS_HELP_STRING([--with-lighttpd-cfg=FILE], [also install the lighttpd configuration at FILE (requires --with-upnp) @<:@default=no@:>@]),
 	[], [with_lighttpd_cfg=no])

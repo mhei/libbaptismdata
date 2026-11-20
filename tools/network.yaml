@@ -1,0 +1,12 @@
+# Map Device Tree compatible strings to interface names to ignore.
+# Matching uses complete entries from /proc/device-tree/compatible.
+# If multiple entries match, their interface lists are combined.
+# Interface names are exact names, not glob patterns.
+# Restart bd-upnp-manager after changing this file.
+ignore_interfaces: {}
+
+# Example configuration (replace the empty mapping above to enable it):
+# ignore_interfaces:
+#   "example,my-board":
+#     - eth1
+#     - eth2

@@ -26,7 +26,7 @@ bd_mdns_LDADD += $(AVAHI_LIBS)
 bd_mdns_LDFLAGS = $(LIBUBOOTENV_LDFLAGS)
 endif
 
-EXTRA_DIST = lighttpd-bd-upnp.conf.in
+EXTRA_DIST = lighttpd-bd-upnp.conf.in network.yaml
 
 if WITH_UPNP
 sbin_PROGRAMS += bd-upnp
@@ -55,4 +55,24 @@ if WITH_LIGHTTPD_CFG
 uninstall-hook:
 	rm -f "$(DESTDIR)$(LIGHTTPD_CFG)"
 endif
+endif
+
+if WITH_UPNP_MANAGER
+sbin_PROGRAMS += bd-upnp-manager
+bd_upnp_manager_SOURCES = bd-upnp-manager.c bd-upnp-manager-policy.c bd-upnp-manager-policy.h
+bd_upnp_manager_CPPFLAGS = -I$(top_builddir) $(UPNP_MANAGER_CFLAGS)
+bd_upnp_manager_CPPFLAGS += -DBD_UPNP_MANAGER_CONFIG='"$(datadir)/bd-upnp-manager/network.yaml"'
+bd_upnp_manager_LDADD = $(UPNP_MANAGER_LIBS)
+
+upnpmanagerdir = $(datadir)/bd-upnp-manager
+dist_upnpmanager_DATA = network.yaml
+
+check_PROGRAMS = bd-upnp-manager-policy-test bd-upnp-manager-state-test
+TESTS = $(check_PROGRAMS)
+bd_upnp_manager_policy_test_SOURCES = bd-upnp-manager-policy-test.c bd-upnp-manager-policy.c bd-upnp-manager-policy.h
+bd_upnp_manager_policy_test_CPPFLAGS = $(UPNP_MANAGER_CFLAGS)
+bd_upnp_manager_policy_test_LDADD = $(UPNP_MANAGER_LIBS)
+bd_upnp_manager_state_test_SOURCES = bd-upnp-manager-state-test.c bd-upnp-manager-policy.c bd-upnp-manager-policy.h
+bd_upnp_manager_state_test_CPPFLAGS = -I$(top_builddir) $(UPNP_MANAGER_CFLAGS)
+bd_upnp_manager_state_test_LDADD = $(UPNP_MANAGER_LIBS)
 endif

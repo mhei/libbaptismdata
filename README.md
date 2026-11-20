@@ -320,3 +320,64 @@ Legal Notice
 Trade names, trademarks and registered trademarks are used without special
 marking throughout the source code and/or documentation. All are the property
 of their respective owners.
+
+
+bd-upnp-manager
+---------------
+
+Build the optional Linux/systemd interface manager with
+``./configure --with-upnp --with-upnp-manager``. It additionally requires
+``libsystemd >= 237`` and ``yaml-0.1`` development files. Without
+``--with-upnp-manager``, these dependencies are not searched for.
+
+``bd-upnp-manager`` runs in the foreground and manages ``bd-upnp@.service``
+instances through the systemd system bus. The service template must be supplied
+by the system integrator; it should execute ``bd-upnp --interface %I`` and bind
+its lifetime to ``bd-upnp-manager.service`` using ``BindsTo=`` and ``After=``.
+Enable the manager service, not individual instances. Use ``Restart=on-failure``
+and ``RestartPreventExitStatus=10`` for the instances. The manager owns all
+instances of this template, including instances already active at startup.
+
+The default configuration is ``${datadir}/bd-upnp-manager/network.yaml``
+(normally ``/usr/share/bd-upnp-manager/network.yaml``). An empty example with
+English comments is installed when the manager is enabled. Supply another file
+with ``--config FILE`` or ``-c FILE``. ``--help`` and ``--version`` are supported.
+Restart the manager to apply configuration or Device Tree changes.
+
+For example:
+
+```yaml
+ignore_interfaces:
+  "example,my-board":
+    - eth1
+    - eth2
+```
+
+``ignore_interfaces`` must be a mapping of unique DT compatible strings to
+lists of exact interface names (not glob patterns). The manager compares whole
+NUL-separated strings from ``/proc/device-tree/compatible`` and combines the
+exclusions for every matching entry. ``ignore_interfaces: {}`` excludes no
+interfaces by policy. Invalid or missing configuration is fatal. An unreadable
+Device Tree produces a warning and no DT exclusions; unknown compatibles
+simply match no rule. Multiple YAML documents and duplicate mapping keys are
+rejected.
+
+Candidates have Ethernet link type, support multicast, and match one of
+``eth*``, ``en*``, ``wlan*``, ``wl*``, ``br*``, or ``usb*``. Bridge members are
+excluded; the bridge itself remains eligible. The manager reads the current
+link attributes and bridge membership from ``/sys/class/net``. It subscribes to
+rtnetlink link notifications before the initial scan, coalesces event bursts
+for 100 milliseconds, and rescans after a detected receive overflow. It does
+not poll interfaces or addresses periodically. Address and carrier changes are
+handled by ``bd-upnp`` itself.
+
+Disappeared, renamed, newly excluded, or recreated interfaces stop their old
+instances before new instances are started. Transient systemd job failures are
+retried after five seconds. An instance that exits with status 10 remains
+suppressed until its eligibility changes or the manager restarts; unrelated
+link events do not repeatedly start it. On shutdown, the manager requests stops
+for the instances it manages. Root privileges (or equivalent system-bus
+permissions) are required to manage units.
+
+``make check`` runs policy and lifecycle tests, including synthetic link events,
+without changing host interfaces or controlling the host systemd manager.
